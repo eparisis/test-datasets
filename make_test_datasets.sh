@@ -17,7 +17,7 @@ mkdir -p "$OUT"/{src,mini,mid}
 cd "$OUT"
 
 run() { pixi exec -c conda-forge -c bioconda \
-    -s minimap2==2.31 -s samtools==1.24 -s seqkit==2.10.1 -s rasusa==5.1.0 "$@"; }
+    -s minimap2==2.31 -s samtools==1.24 -s seqkit==2.10.1 -s rasusa==5.1.0 -s filtlong==0.3.1 "$@"; }
 
 ENA=https://ftp.sra.ebi.ac.uk/vol1/fastq
 NCBI=https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi
@@ -70,11 +70,14 @@ run seqkit grep -f <(cut -f1 src/sphae_mini.bed) src/sphaerotilus.fna.gz \
     | run seqkit seq -i -o mini/mini_noncyano.fna.gz
 
 # --- Mid dataset -----------------------------------------------------------------------
-# Whole PCC 7120 (7.21 Mb, chromosome + 6 plasmids) at ~40x mixed with S. natans
-# (4.59 Mb) at ~20x, as a non-axenic culture. FASTA row: Nostoc sp. MS1 (RefSeq).
-run rasusa reads -c 40 -g 7212000 -s $SEED -O fastq -Z u "$CYANO_READS" > src/mid_cyano.fastq
-run rasusa reads -c 20 -g 4593000 -s $SEED -O fastq -Z u "$SPHAE_READS" > src/mid_sphae.fastq
-cat src/mid_cyano.fastq src/mid_sphae.fastq | run seqkit shuffle -s $SEED -o mid/mid_coculture.fastq.gz
+# Whole PCC 7120 (7.21 Mb, chromosome + 6 plasmids) at ~11x mixed with S. natans (4.59 Mb)
+# at ~4x, as a non-axenic culture, kept under ~80 MB so it fits in git. Filtlong keeps the
+# longest, best reads, which matters more for assembly than depth at this size.
+# FASTA row: Nostoc sp. MS1 (RefSeq).
+run filtlong --target_bases 79000000 "$CYANO_READS" > src/mid_cyano.fastq
+run filtlong --target_bases 18000000 "$SPHAE_READS" > src/mid_sphae.fastq
+cat src/mid_cyano.fastq src/mid_sphae.fastq | run seqkit seq -i | run seqkit shuffle -s $SEED \
+    | gzip -9 > mid/mid_coculture.fastq.gz
 run seqkit seq -i src/nostoc_ms1.fna -o mid/mid_nostoc_ms1.fna.gz
 
 cat > mini/mini_samplesheet.csv <<EOS
