@@ -1,0 +1,7 @@
+2413b53c973d63c7afca333682910bb5 mid_nostoc_ms1.fna.gz
+b129199ae9a1b226b65d7e4cf57c0dbf mini_coculture.fastq.gz
+a14c354d58c48372f837044ede970e43 mini_cyano.fna.gz
+d3541fd2fff2c3cf0b17c3f2b21c5693 mini_noncyano.fna.gz
+212ed7a0d1882d30bf8692ca91de699b gunc-mock.dmnd
+003caf51696dcc8110a68a82bf1074b8 host_human_chr1_fragment.fasta
+e1d521257b8a24820cc06ae98550cc25 release-assets/mid_coculture.fastq.gz

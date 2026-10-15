@@ -1,0 +1,4 @@
+sample,name,fastq,fasta,platform
+MINI,PCC7120_coculture,https://raw.githubusercontent.com/eparisis/test-datasets/cyanosuite/mini_coculture.fastq.gz,,ONT
+MINI_FA,PCC7120_fragment,,https://raw.githubusercontent.com/eparisis/test-datasets/cyanosuite/mini_cyano.fna.gz,
+MINI_FA,Sphaerotilus_fragment,,https://raw.githubusercontent.com/eparisis/test-datasets/cyanosuite/mini_noncyano.fna.gz,
